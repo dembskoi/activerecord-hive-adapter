@@ -1,5 +1,6 @@
 *.swp
 .bundle
+.idea/**
 .rvmrc
 .svn
 .DS_Store

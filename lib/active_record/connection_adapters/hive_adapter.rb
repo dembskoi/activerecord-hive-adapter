@@ -64,16 +64,16 @@ module ActiveRecord
       def select(sql, name = nil)
         results = select_rows(sql)
 
-        # Lookup schema information
-        cols = @connection.client.getSchema.fieldSchemas.collect { |c| c.name }
-
-        rows = []
-        results.each do |r|
-          row = {}
-          cols.each_with_index { |c, i| row[c] = r[i] }
-          rows << row 
-        end
-        rows
+#        # Lookup schema information
+#        cols = @connection.client.getSchema.fieldSchemas.collect { |c| c.name }
+#
+#        rows = []
+#        results.each do |r|
+#          row = {}
+#          cols.each_with_index { |c, i| row[c] = r[i] }
+#          rows << row
+#        end
+#        rows
       end
 
 
@@ -148,12 +148,6 @@ module ActiveRecord
         execute create_sql
       end
 
-
-
-
-
-
-
       # TODO Deal with Hive 0.7 Indexes
       def indexes(table_name, name = nil); []; end
       def indexes_not_supported(*args)
@@ -162,6 +156,7 @@ module ActiveRecord
           So #{caller.first} on #{args.to_json} would fail
         INDEXES_NOT_SUPPORTED
       end
+
       def index_name_exists?(table_name, index_name, default); false; end
       def index_name(table_name, options);                  indexes_not_supported; end
       def remove_index!(table_name, index_name);            indexes_not_supported; end
@@ -169,8 +164,6 @@ module ActiveRecord
       def rename_index(table_name, old_name, new_name);     indexes_not_supported; end
       def add_index(table_name, column_name, options = {}); indexes_not_supported; end
       def index_exists?(table_name, column_name, options = {}); indexes_not_supported; end
-
-
 
       def hive_table_definition
         HiveTableDefinition.new(self)
@@ -196,26 +189,23 @@ module ActiveRecord
       end
     end
 
-    class ColumnDefinition
-      attr_accessor :partition
-
-      def to_sql
-        column_sql = "#{base.quote_column_name(name)} #{sql_type}"
-        column_options = {}
-        column_options[:null] = null unless null.nil?
-        column_options[:default] = default unless default.nil?
-        column_options[:partition] = partition if partition
-        column_options[:requested_type] = type
-        add_column_options!(
-          column_sql, 
-          base.native_database_types[type].update(column_options)
-        )
-        column_sql
-      end
-
-      
-
-    end
+#    class ColumnDefinition
+#      attr_accessor :partition
+#
+#      def to_sql
+#        column_sql = "#{base.quote_column_name(name)} #{sql_type}"
+#        column_options = {}
+#        column_options[:null] = null unless null.nil?
+#        column_options[:default] = default unless default.nil?
+#        column_options[:partition] = partition if partition
+#        column_options[:requested_type] = type
+#        add_column_options!(
+#          column_sql,
+#          base.native_database_types[type].update(column_options)
+#        )
+#        column_sql
+#      end
+#    end
 
     class HiveTableDefinition < TableDefinition
      
